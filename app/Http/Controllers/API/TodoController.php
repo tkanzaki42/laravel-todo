@@ -64,7 +64,7 @@ class TodoController extends Controller
         $todo = Todo::findOrFail($id);
         $todo->update($validatedData);
 
-        return response()->json($todo, 200);
+        return response()->json($todo, 204);
     }
 
     /**

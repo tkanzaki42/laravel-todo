@@ -1,0 +1,33 @@
+name: Unit Test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  feature-test:
+    name: Feature Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Copy env file
+        run: |
+          cp .env.example .env
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-suggest
+      - name: Wait for DB to be ready
+        run: |
+          docker compose up -d mysql
+          until docker compose exec -T mysql mysql -h ${DB_HOST} -u ${DB_USERNAME} -p${DB_PASSWORD} -e "SELECT 1"; do
+            echo 'Waiting for DB to be ready...'
+            sleep 1
+          done
+      - name: Run Feature Tests
+        run: vendor/bin/phpunit --testsuite=Feature
