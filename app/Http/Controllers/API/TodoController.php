@@ -28,8 +28,7 @@ class TodoController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
+            'task' => 'required',
         ]);
 
         $todo = Todo::create($validatedData);
@@ -59,8 +58,7 @@ class TodoController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
+            'task' => 'required',
         ]);
 
         $todo = Todo::findOrFail($id);
