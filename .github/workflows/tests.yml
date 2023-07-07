@@ -1,4 +1,4 @@
-name: Unit Test
+name: Feature Test
 on:
   push:
     branches:
@@ -24,8 +24,8 @@ jobs:
         run: composer install --no-interaction --prefer-dist --optimize-autoloader --no-suggest
       - name: Wait for DB to be ready
         run: |
-          docker compose up -d mysql
-          until docker compose exec -T mysql mysql -h ${DB_HOST} -u ${DB_USERNAME} -p${DB_PASSWORD} -e "SELECT 1"; do
+          docker compose up -d db
+          until docker compose exec -T db mysql -h ${DB_HOST} -u ${DB_USERNAME} -p${DB_PASSWORD} -e "SELECT 1"; do
             echo 'Waiting for DB to be ready...'
             sleep 1
           done
